@@ -4,3 +4,6 @@
 # ppt file
 *.ppt
 *.pptx
+
+# excel file
+*.xlsx
