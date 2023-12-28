@@ -1,0 +1,6 @@
+# specific folder: .folder_name/
+# specific file format: *.format
+
+# ppt file
+*.ppt
+*.pptx
