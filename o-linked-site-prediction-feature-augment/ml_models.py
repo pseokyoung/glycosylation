@@ -4,6 +4,7 @@ from keras.optimizers import Adam
 from keras.losses import CategoricalCrossentropy
 from tensorflow import constant
 
+############### Model evaluation ###############
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 import numpy as np
 
@@ -24,16 +25,52 @@ def metrics_classification(model, test_x, test_y,
 
     return test_loss, accuracy, precision, recall, f1
 
-def MLP(x_dim, y_dim, params):
-    dnn_layers  = params['dnn_layers']
-    dnn_neurons = params['dnn_neurons']
-    activation  = params['activation']
-    loss        = params['loss']
-    metrics     = params['metrics']
-    optimizer   = params['optimizer']
-    regularizer_input  = params['regularizer']['input']
-    regularizer_hidden = params['regularizer']['hidden']
-    regularizer_bias   = params['regularizer']['bias']
+
+############### Model configuration ###############
+def name_model(algorithm_type = '', params = {}):
+    name = algorithm_type
+    for key, value in params.items():
+        if key == 'optimizer':
+            if type(value) == keras.optimizers.optimizer_v2.adam.Adam:
+                name += f"_adam"
+            else:
+                name += f"_else"
+        elif key == 'regularizer':
+            name += f"_{value['input']}_{value['hidden']}_{value['bias']}"
+            
+        else:
+            name += f"_{value}"
+        
+    return name
+
+def get_optimizer(optimizer_type, learning_rate):
+    if optimizer_type == 'Adam':
+        return Adam(learning_rate = learning_rate, beta_1=0.9, beta_2=0.999)
+    else:
+        print("None of optimizers")
+
+default_params = {
+    'dnn_layers'     : 3,
+    'dnn_neurons'    : 64,
+    'activation'     : 'softmax',
+    'loss'           : 'categorical_crossentropy',
+    'metrics'        : 'accuracy',
+    'optimizer_type' : 'Adam',
+    'learning_rate'  : 0.001,
+    'regularizer'    : {'input': None, 'hidden': None, 'bias': None}
+}
+
+def MLP_CLS(x_dim, y_dim, params):
+    dnn_layers         = params.get('dnn_layers',     default_params['dnn_layers'])
+    dnn_neurons        = params.get('dnn_neurons',    default_params['dnn_neurons'])
+    activation         = params.get('activation',     default_params['activation'])
+    loss               = params.get('loss',           default_params['loss'])
+    metrics            = params.get('metrics',        default_params['metrics'])
+    optimizer_type     = params.get('optimizer_type', default_params['optimizer_type'])
+    learning_rate      = params.get('learning_rate',  default_params['learning_rate'])
+    regularizer_input  = params.get('regularizer',    None).get('input', None)
+    regularizer_hidden = params.get('regularizer',    None).get('hidden', None)
+    regularizer_bias   = params.get('regularizer',    None).get('bias', None)
     
     model_input  = Input(shape=(x_dim,), name='model_input')
     dense_output = Dense(dnn_neurons, kernel_regularizer=regularizer_input, bias_regularizer=regularizer_bias, 
@@ -47,28 +84,29 @@ def MLP(x_dim, y_dim, params):
                          name=f"model_output", activation=activation)(dense_output)  
     model = Model(model_input, model_output)
     
-    model.compile(loss = loss, optimizer = optimizer, metrics = metrics)
+    model.compile(loss = loss, optimizer = get_optimizer(optimizer_type, learning_rate), metrics = metrics)
     
     return model
 
 def LSTM(x_len, x_dim, y_dim, params):
-    rnn_layers  = params['rnn_layers']
-    rnn_neurons = params['rnn_neurons']
-    dnn_layers  = params['dnn_layers']
-    dnn_neurons = params['dnn_neurons']
-    activation  = params['activation']
-    loss        = params['loss']
-    metrics     = params['metrics']
-    optimizer   = params['optimizer']
-    regularizer_input  = params['regularizer']['input']
-    regularizer_hidden = params['regularizer']['hidden']
-    regularizer_bias   = params['regularizer']['bias']
+    rnn_layers         = params.get('rnn_layers',     default_params['rnn_layers'])
+    rnn_neurons        = params.get('rnn_neurons',    default_params['rnn_neurons'])
+    dnn_layers         = params.get('dnn_layers',     default_params['dnn_layers'])
+    dnn_neurons        = params.get('dnn_neurons',    default_params['dnn_neurons'])
+    activation         = params.get('activation',     default_params['activation'])
+    loss               = params.get('loss',           default_params['loss'])
+    metrics            = params.get('metrics',        default_params['metrics'])
+    optimizer_type     = params.get('optimizer_type', default_params['optimizer_type'])
+    learning_rate      = params.get('learning_rate',  default_params['learning_rate'])
+    regularizer_input  = params.get('regularizer',    None).get('input', None)
+    regularizer_hidden = params.get('regularizer',    None).get('hidden', None)
+    regularizer_bias   = params.get('regularizer',    None).get('bias', None)
     
     model_input  = Input(shape=(x_len, x_dim), name='model_input')
     
         # encoder module
     if rnn_layers == 1:
-        rnn_output, state_h, state_c = LSTM(params['rnn_neurons'], kernel_regularizer=regularizer_input, bias_regularizer=regularizer_bias, 
+        rnn_output, state_h, state_c = LSTM(rnn_neurons, kernel_regularizer=regularizer_input, bias_regularizer=regularizer_bias, 
                                             return_state=True, name='rnn_1')(model_input)
         # encoder_states = [state_h, state_c]
 
@@ -108,6 +146,6 @@ def LSTM(x_len, x_dim, y_dim, params):
     
     model = Model(model_input, model_output)
     
-    model.compile(loss = loss, optimizer = optimizer, metrics = metrics)
+    model.compile(loss = loss, optimizer = get_optimizer(optimizer_type, learning_rate), metrics = metrics)
     
     return model

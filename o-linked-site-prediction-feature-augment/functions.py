@@ -53,3 +53,38 @@ def get_window(data, idx, window_size):
         
     return zero_frame
 
+def sequence_with_positivity(protein_data):
+    '''
+    protein_data: dataframe with single row
+    
+    '''
+    df = pd.DataFrame([x for x in protein_data['sequence'].values[0]], columns=['residue']) 
+    
+    df['positivity'] = 0
+    positive_sites = eval(protein_data['oglcnac sites'].values[0])
+    for site in positive_sites:
+        df.loc[site-1, 'positivity'] = 1    
+        
+    return df
+
+def data_scaling(train_data, test_data):
+    if len(train_data.shape) > 2:
+        x_min, x_max = train_data.min(0).min(0), train_data.max(0).max(0)
+    else:
+        x_min, x_max = train_data.min(0), train_data.max(0)
+        
+    train_data_sc = (train_data - x_min) / (x_max - x_min)
+    test_data_sc  = (test_data - x_min)  / (x_max - x_min)
+        
+    return train_data_sc, test_data_sc
+
+def upsample_data(train_x, train_y, seed=42):
+    np.random.seed(seed)
+    pos_indices = np.where(train_y[:,1] == 1)[0]
+    neg_indices = np.where(train_y[:,1] == 0)[0]
+    pos_upsampled = np.random.choice(pos_indices, size=len(neg_indices), replace=True)
+    train_x = np.concatenate([train_x[pos_upsampled], train_x[neg_indices]], axis=0)
+    train_y = np.concatenate([train_y[pos_upsampled], train_y[neg_indices]], axis=0)
+    shuffle_indices = np.arange(len(train_x))
+    np.random.shuffle(shuffle_indices)
+    return train_x[shuffle_indices], train_y[shuffle_indices]
