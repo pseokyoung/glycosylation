@@ -50,6 +50,8 @@ def get_optimizer(optimizer_type, learning_rate):
         print("None of optimizers")
 
 default_params = {
+    'rnn_layers'     : 1,
+    'rnn_neurons'    : 64,
     'dnn_layers'     : 3,
     'dnn_neurons'    : 64,
     'activation'     : 'softmax',
@@ -88,9 +90,10 @@ def MLP_CLS(x_dim, y_dim, params):
     
     return model
 
-def LSTM(x_len, x_dim, y_dim, params):
+def LSTM_CLS(x_len, x_dim, y_dim, params):
     rnn_layers         = params.get('rnn_layers',     default_params['rnn_layers'])
     rnn_neurons        = params.get('rnn_neurons',    default_params['rnn_neurons'])
+    
     dnn_layers         = params.get('dnn_layers',     default_params['dnn_layers'])
     dnn_neurons        = params.get('dnn_neurons',    default_params['dnn_neurons'])
     activation         = params.get('activation',     default_params['activation'])
