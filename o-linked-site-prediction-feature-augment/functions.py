@@ -63,7 +63,7 @@ def sequence_with_positivity(protein_data):
     df['positivity'] = 0
     positive_sites = eval(protein_data['oglcnac sites'].values[0])
     for site in positive_sites:
-        df.loc[site-1, 'positivity'] = 1    
+        df.loc[site - 1, 'positivity'] = 1    
         
     return df
 
@@ -88,3 +88,4 @@ def upsample_data(train_x, train_y, seed=42):
     shuffle_indices = np.arange(len(train_x))
     np.random.shuffle(shuffle_indices)
     return train_x[shuffle_indices], train_y[shuffle_indices]
+
