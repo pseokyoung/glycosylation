@@ -1,3 +1,19 @@
+import pandas as pd
+
+def sequence_with_positivity(protein_data):
+    '''
+    protein_data: dataframe with single row
+    
+    '''
+    df = pd.DataFrame([x for x in protein_data['sequence'].values[0]], columns=['residue']) 
+    
+    df['positivity'] = 0
+    positive_sites = eval(protein_data['oglcnac sites'].values[0])
+    for site in positive_sites:
+        df.loc[site - 1, 'positivity'] = 1    
+        
+    return df
+
 def make_window(sequence:str, idx:int, window_range = (-10,10)):
     assert window_range[0] < 0, 'window_range must start with negative value'
     assert window_range[1] > 0, 'window_range must end with positive value'
