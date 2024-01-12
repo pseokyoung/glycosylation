@@ -1,65 +1,45 @@
 import pandas as pd 
 import numpy as np
 
-aa_abb = {
-'Alanine'       : ['Ala', 'A'],
-'Arginine'      : ['Arg', 'R'],
-'Asparagine'    : ['Asn', 'N'],
-'Aspartic acid' : ['Asp', 'D'],
-'Cysteine'      : ['Cys', 'C'],
-'Glutamine'     : ['Gln', 'Q'],
-'Glutamic Acid' : ['Glu', 'E'],
-'Glycine'       : ['Gly', 'G'],
-'Histidine'     : ['His', 'H'],
-'Isoleucine'    : ['Ile', 'I'],
-'Leucine'       : ['Leu', 'L'],
-'Lysine'        : ['Lys', 'K'],
-'Methionine'    : ['Met', 'M'],
-'Phenylalanine' : ['Phe', 'F'],
-'Proline'       : ['Pro', 'P'],
-'Serine'        : ['Ser', 'S'],
-'Threonine'     : ['Thr', 'T'],
-'Tryptophan'    : ['Trp', 'W'],
-'Tyrosine'      : ['Tyr', 'Y'],
-'Valine'        : ['Val', 'V']
-}
-
 aa_properties = { 
            # hydropathy   volume        chemical     charge       polarity 
-    'A' : ['hydrophobic', 'very_small', 'aliphatic', 'uncharged', 'nonpolar'],
-    'R' : ['hydrophilic', 'large'     , 'basic'    , 'positive' , 'polar'],
-    'N' : ['hydrophilic', 'small'     , 'amide'    , 'uncharged', 'polar'],
-    'D' : ['hydrophilic', 'small'     , 'acidic'   , 'negative' , 'polar'],
-    'C' : ['hydrophobic', 'small'     , 'sulfur'   , 'uncharged', 'nonpolar'],
-    'Q' : ['hydrophilic', 'medium'    , 'amide'    , 'uncharged', 'polar'],
-    'E' : ['hydrophilic', 'medium'    , 'acidic'   , 'negative' , 'polar'],
-    'G' : ['hydrophobic', 'very_small', 'aliphatic', 'uncharged', 'nonpolar'],
-    'H' : ['hydrophilic', 'medium'    , 'basic'    , 'positive' , 'polar'],
-    'I' : ['hydrophobic', 'large'     , 'aliphatic', 'uncharged', 'nonpolar'],
-    'L' : ['hydrophobic', 'large'     , 'aliphatic', 'uncharged', 'nonpolar'],
-    'K' : ['hydrophilic', 'large'     , 'basic'    , 'positive' , 'polar'],
-    'M' : ['hydrophobic', 'large'     , 'sulfur'   , 'uncharged', 'nonpolar'],
-    'F' : ['hydrophobic', 'very_large', 'aromatic' , 'uncharged', 'nonpolar'],
-    'P' : ['hydrophobic', 'small'     , 'aliphatic', 'uncharged', 'nonpolar'],
-    'S' : ['hydrophilic', 'very_small', 'hydroxyl' , 'uncharged', 'polar'],
-    'T' : ['hydrophilic', 'small'     , 'hydroxyl' , 'uncharged', 'polar'],
-    'W' : ['hydrophobic', 'very_large', 'aromatic' , 'uncharged', 'nonpolar'],
-    'Y' : ['hydrophobic', 'very_large', 'aromatic' , 'uncharged', 'polar'],
-    'V' : ['hydrophobic', 'medium'    , 'aliphatic', 'uncharged', 'nonpolar'],
+    'A, Ala' : ['hydrophobic', 'very_small', 'aliphatic', 'uncharged', 'nonpolar'],
+    'R, Arg' : ['hydrophilic', 'large'     , 'basic'    , 'positive' , 'polar'],
+    'N, Asn' : ['hydrophilic', 'small'     , 'amide'    , 'uncharged', 'polar'],
+    'D, Asp' : ['hydrophilic', 'small'     , 'acidic'   , 'negative' , 'polar'],
+    'C, Cys' : ['hydrophobic', 'small'     , 'sulfur'   , 'uncharged', 'nonpolar'],
+    'Q, Gln' : ['hydrophilic', 'medium'    , 'amide'    , 'uncharged', 'polar'],
+    'E, Glu' : ['hydrophilic', 'medium'    , 'acidic'   , 'negative' , 'polar'],
+    'G, Gly' : ['hydrophobic', 'very_small', 'aliphatic', 'uncharged', 'nonpolar'],
+    'H, His' : ['hydrophilic', 'medium'    , 'basic'    , 'positive' , 'polar'],
+    'I, Ile' : ['hydrophobic', 'large'     , 'aliphatic', 'uncharged', 'nonpolar'],
+    'L, Leu' : ['hydrophobic', 'large'     , 'aliphatic', 'uncharged', 'nonpolar'],
+    'K, Lys' : ['hydrophilic', 'large'     , 'basic'    , 'positive' , 'polar'],
+    'M, Met' : ['hydrophobic', 'large'     , 'sulfur'   , 'uncharged', 'nonpolar'],
+    'F, Phe' : ['hydrophobic', 'very_large', 'aromatic' , 'uncharged', 'nonpolar'],
+    'P, Pro' : ['hydrophobic', 'small'     , 'aliphatic', 'uncharged', 'nonpolar'],
+    'S, Ser' : ['hydrophilic', 'very_small', 'hydroxyl' , 'uncharged', 'polar'],
+    'T, Thr' : ['hydrophilic', 'small'     , 'hydroxyl' , 'uncharged', 'polar'],
+    'W, Trp' : ['hydrophobic', 'very_large', 'aromatic' , 'uncharged', 'nonpolar'],
+    'Y, Tyr' : ['hydrophobic', 'very_large', 'aromatic' , 'uncharged', 'polar'],
+    'V, Val' : ['hydrophobic', 'medium'    , 'aliphatic', 'uncharged', 'nonpolar'],
 }
 
-# for_onehot = { # column_name : classes
-#     # for input variables
-#     'residue' : ['A', 'R', 'N', 'D', 'C',
-#                  'E', 'Q', 'G', 'H', 'I',
-#                  'L', 'K', 'M', 'F', 'P',
-#                  'S', 'T', 'W', 'Y', 'V'],
+FOR_ONEHOT = { # column_name : classes
+    # for input variables
+    'residue' : ['A', 'R', 'N', 'D', 'C', 'E', 'Q', 'G', 'H', 'I',
+                 'L', 'K', 'M', 'F', 'P', 'S', 'T', 'W', 'Y', 'V'],
     
-#     # for output variables
-#     'positivity' : [0, 1]
-# }
+    # for mauri's basic features
+    **{f'side_{num}' : ['very_small', 'small', 'normal', 'long', 'glycine', 'proline', 'aromatic'] for num in range(-1,6) if num != 0},
+    'ss' : ['C', 'E', 'H'],
+    'ss_angle' : ['alpha', 'other', 'beta'],
+    
+    # for output variables
+    'positivity' : [0, 1]
+}
 
-def get_onehots(dataframe, columns=[], for_onehot={}):
+def get_onehots(dataframe, columns=[]):
     df_col = dataframe[columns].copy()
     df_not = dataframe.loc[:,~dataframe.columns.isin(columns)].copy()
     
@@ -67,7 +47,7 @@ def get_onehots(dataframe, columns=[], for_onehot={}):
         return 1 if x == key else 0      
 
     for column in columns:
-        for key in for_onehot[column]:
+        for key in FOR_ONEHOT[column]:
             df_col[f'{column}_{key}'] = df_col[column].apply(lambda x: is_equal(x, key))
 
     df_col = df_col.drop(columns=columns)
