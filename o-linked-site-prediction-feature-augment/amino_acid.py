@@ -1,49 +1,4 @@
-aa_abb = {
-'Alanine'       : ['Ala', 'A'],
-'Arginine'      : ['Arg', 'R'],
-'Asparagine'    : ['Asn', 'N'],
-'Aspartic acid' : ['Asp', 'D'],
-'Cysteine'      : ['Cys', 'C'],
-'Glutamine'     : ['Gln', 'Q'],
-'Glutamic Acid' : ['Glu', 'E'],
-'Glycine'       : ['Gly', 'G'],
-'Histidine'     : ['His', 'H'],
-'Isoleucine'    : ['Ile', 'I'],
-'Leucine'       : ['Leu', 'L'],
-'Lysine'        : ['Lys', 'K'],
-'Methionine'    : ['Met', 'M'],
-'Phenylalanine' : ['Phe', 'F'],
-'Proline'       : ['Pro', 'P'],
-'Serine'        : ['Ser', 'S'],
-'Threonine'     : ['Thr', 'T'],
-'Tryptophan'    : ['Trp', 'W'],
-'Tyrosine'      : ['Tyr', 'Y'],
-'Valine'        : ['Val', 'V']
-}
 
-aa_properties = { 
-           # hydropathy   volume        chemical     charge       polarity 
-    'A' : ['hydrophobic', 'very_small', 'aliphatic', 'uncharged', 'nonpolar'],
-    'R' : ['hydrophilic', 'large'     , 'basic'    , 'positive' , 'polar'],
-    'N' : ['hydrophilic', 'small'     , 'amide'    , 'uncharged', 'polar'],
-    'D' : ['hydrophilic', 'small'     , 'acidic'   , 'negative' , 'polar'],
-    'C' : ['hydrophobic', 'small'     , 'sulfur'   , 'uncharged', 'nonpolar'],
-    'Q' : ['hydrophilic', 'medium'    , 'amide'    , 'uncharged', 'polar'],
-    'E' : ['hydrophilic', 'medium'    , 'acidic'   , 'negative' , 'polar'],
-    'G' : ['hydrophobic', 'very_small', 'aliphatic', 'uncharged', 'nonpolar'],
-    'H' : ['hydrophilic', 'medium'    , 'basic'    , 'positive' , 'polar'],
-    'I' : ['hydrophobic', 'large'     , 'aliphatic', 'uncharged', 'nonpolar'],
-    'L' : ['hydrophobic', 'large'     , 'aliphatic', 'uncharged', 'nonpolar'],
-    'K' : ['hydrophilic', 'large'     , 'basic'    , 'positive' , 'polar'],
-    'M' : ['hydrophobic', 'large'     , 'sulfur'   , 'uncharged', 'nonpolar'],
-    'F' : ['hydrophobic', 'very_large', 'aromatic' , 'uncharged', 'nonpolar'],
-    'P' : ['hydrophobic', 'small'     , 'aliphatic', 'uncharged', 'nonpolar'],
-    'S' : ['hydrophilic', 'very_small', 'hydroxyl' , 'uncharged', 'polar'],
-    'T' : ['hydrophilic', 'small'     , 'hydroxyl' , 'uncharged', 'polar'],
-    'W' : ['hydrophobic', 'very_large', 'aromatic' , 'uncharged', 'nonpolar'],
-    'Y' : ['hydrophobic', 'very_large', 'aromatic' , 'uncharged', 'polar'],
-    'V' : ['hydrophobic', 'medium'    , 'aliphatic', 'uncharged', 'nonpolar'],
-}
 
 
 mauri_properties = {
