@@ -102,6 +102,9 @@ def data_scaling(train_data, test_data):
         
     train_data_sc = (train_data - x_min) / (x_max - x_min)
     test_data_sc  = (test_data - x_min)  / (x_max - x_min)
+    
+    train_data_sc[np.isnan(train_data_sc)] = 0
+    test_data_sc[np.isnan(test_data_sc)] = 0
         
     return train_data_sc, test_data_sc
 

@@ -49,6 +49,37 @@ def get_optimizer(optimizer_type, learning_rate):
     else:
         print("None of optimizers")
 
+from keras import backend as K
+from keras.regularizers import Regularizer, l1, l2
+import numpy as np
+
+class SGL21(Regularizer):
+    def __init__(self, l_value=0.0001):
+        self.l_value = K.cast_to_floatx(l_value)
+
+    def __call__(self, x):
+        const_coeff = np.sqrt(K.int_shape(x)[1])
+        return self.l_value*( const_coeff*K.sum(K.sqrt(K.sum(K.square(x), axis=1))) + K.sum(K.abs(x)) )
+
+    def get_config(self):
+        return {'l_value': float(self.l_value)}
+
+def get_regularizer(type_coeff):
+    if type_coeff:
+        reg_type  = type_coeff.split('_')[0]
+        l_value = float(type_coeff.split('_')[1])
+        if reg_type == 'L1': # Lasso regularization
+            return l1(l_value)
+        elif reg_type == 'L2': # Ridge regularization
+            return l2(l_value)
+        elif reg_type == 'L21': # Group Lasso regularization
+            return SGL21(l_value)
+        else:
+            return 'input valid regularizer reg_type and l_value'
+    else:
+        return None
+        
+
 default_params = {
     'rnn_layers'     : 1,
     'rnn_neurons'    : 64,
@@ -70,9 +101,9 @@ def MLP_CLS(x_dim, y_dim, params):
     metrics            = params.get('metrics',        default_params['metrics'])
     optimizer_type     = params.get('optimizer_type', default_params['optimizer_type'])
     learning_rate      = params.get('learning_rate',  default_params['learning_rate'])
-    regularizer_input  = params.get('regularizer',    None).get('input', None)
-    regularizer_hidden = params.get('regularizer',    None).get('hidden', None)
-    regularizer_bias   = params.get('regularizer',    None).get('bias', None)
+    regularizer_input  = get_regularizer(params.get('regularizer',    None).get('input', None))
+    regularizer_hidden = get_regularizer(params.get('regularizer',    None).get('hidden', None))
+    regularizer_bias   = get_regularizer(params.get('regularizer',    None).get('bias', None))
     
     model_input  = Input(shape=(x_dim,), name='model_input')
     dense_output = Dense(dnn_neurons, kernel_regularizer=regularizer_input, bias_regularizer=regularizer_bias, 
@@ -102,6 +133,9 @@ def LSTM_CLS(x_len, x_dim, y_dim, params):
     optimizer_type     = params.get('optimizer_type', default_params['optimizer_type'])
     learning_rate      = params.get('learning_rate',  default_params['learning_rate'])
     regularizer_input  = params.get('regularizer',    None).get('input', None)
+    if regularizer_input:
+        reg_type  = regularizer_input.split('_')[0]
+        reg_coeff = float(regularizer_input.split('_')[1])
     regularizer_hidden = params.get('regularizer',    None).get('hidden', None)
     regularizer_bias   = params.get('regularizer',    None).get('bias', None)
     

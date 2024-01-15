@@ -1,0 +1,2 @@
+model_id,cv_idx,train_0,train_1,train_2,train_y,test_size,rnn_layers,rnn_neurons,dnn_layers,dnn_neurons,learning_rate,window_size,regularizer_input,regularizer_hidden,regularizer_bias,training_time,test_loss,accuracy,precision_0,precision_1,recall_0,recall_1,f1_0,f1_1
+14,0,9222,21,20,2,2306,3,64,5,64,0.001,10,,,,2.918,0.35211679339408875,92.06,97.26,17.88,94.41000000000001,31.4,95.82000000000001,22.78
