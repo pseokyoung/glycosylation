@@ -37,7 +37,8 @@ def name_model(algorithm_type = '', params = {}):
                 name += f"_else"
         elif key == 'regularizer':
             name += f"_{value['input']}_{value['hidden']}_{value['bias']}"
-            
+        elif key in ['activation', 'loss', 'metrics']:
+            pass
         else:
             name += f"_{value}"
         
@@ -132,12 +133,9 @@ def LSTM_CLS(x_len, x_dim, y_dim, params):
     metrics            = params.get('metrics',        default_params['metrics'])
     optimizer_type     = params.get('optimizer_type', default_params['optimizer_type'])
     learning_rate      = params.get('learning_rate',  default_params['learning_rate'])
-    regularizer_input  = params.get('regularizer',    None).get('input', None)
-    if regularizer_input:
-        reg_type  = regularizer_input.split('_')[0]
-        reg_coeff = float(regularizer_input.split('_')[1])
-    regularizer_hidden = params.get('regularizer',    None).get('hidden', None)
-    regularizer_bias   = params.get('regularizer',    None).get('bias', None)
+    regularizer_input  = get_regularizer(params.get('regularizer',    None).get('input', None))
+    regularizer_hidden = get_regularizer(params.get('regularizer',    None).get('hidden', None))
+    regularizer_bias   = get_regularizer(params.get('regularizer',    None).get('bias', None))
     
     model_input  = Input(shape=(x_len, x_dim), name='model_input')
     
